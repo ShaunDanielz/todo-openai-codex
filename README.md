@@ -1,6 +1,6 @@
 # Todo App
 
-A simple, feature-rich web-based todo application built with vanilla HTML, CSS, and JavaScript. The UI is designed to be clean and elegant while providing all the common todo list features.
+A simple, feature-rich web-based todo application built with vanilla HTML, CSS, and JavaScript. The UI is optimized for desktop with a clean layout while providing all the common todo list features.
 
 ## Features
 
@@ -9,6 +9,7 @@ A simple, feature-rich web-based todo application built with vanilla HTML, CSS, 
 - Filter tasks by all, active, or completed
 - Persistent storage using `localStorage`
 - Clear all completed tasks
+- Search through tasks in real time
 
 ## Usage
 

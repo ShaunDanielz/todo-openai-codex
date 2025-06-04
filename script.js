@@ -3,9 +3,11 @@ const addBtn = document.getElementById('add-btn');
 const taskList = document.getElementById('task-list');
 const filterButtons = document.querySelectorAll('.filters button[data-filter]');
 const clearCompletedBtn = document.getElementById('clear-completed');
+const searchInput = document.getElementById('search');
 
 let tasks = JSON.parse(localStorage.getItem('tasks')) || [];
 let currentFilter = 'all';
+let searchQuery = '';
 
 function saveTasks() {
     localStorage.setItem('tasks', JSON.stringify(tasks));
@@ -14,6 +16,7 @@ function saveTasks() {
 function renderTasks() {
     taskList.innerHTML = '';
     tasks
+        .filter(task => task.title.toLowerCase().includes(searchQuery.toLowerCase()))
         .filter(task => {
             if (currentFilter === 'active') return !task.completed;
             if (currentFilter === 'completed') return task.completed;
@@ -103,6 +106,11 @@ filterButtons.forEach(btn => {
 clearCompletedBtn.addEventListener('click', () => {
     tasks = tasks.filter(task => !task.completed);
     saveTasks();
+    renderTasks();
+});
+
+searchInput.addEventListener('input', () => {
+    searchQuery = searchInput.value.trim();
     renderTasks();
 });
 
