@@ -8,9 +8,17 @@
 </head>
 <body>
     <div class="container">
-        <h1>My Tasks</h1>
+        <div class="header">
+            <h1>My Tasks</h1>
+            <button id="theme-toggle" title="Toggle light/dark mode">🌗</button>
+        </div>
         <div class="input-wrapper">
             <input type="text" id="new-task" placeholder="What needs to be done?" />
+            <select id="priority">
+                <option value="low">🟢</option>
+                <option value="medium">🟡</option>
+                <option value="high">🔴</option>
+            </select>
             <button id="add-btn">Add</button>
         </div>
         <div class="search-wrapper">

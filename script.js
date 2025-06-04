@@ -4,10 +4,22 @@ const taskList = document.getElementById('task-list');
 const filterButtons = document.querySelectorAll('.filters button[data-filter]');
 const clearCompletedBtn = document.getElementById('clear-completed');
 const searchInput = document.getElementById('search');
+const prioritySelect = document.getElementById('priority');
+const themeToggle = document.getElementById('theme-toggle');
 
 let tasks = JSON.parse(localStorage.getItem('tasks')) || [];
 let currentFilter = 'all';
 let searchQuery = '';
+let theme = localStorage.getItem('theme') || 'light';
+
+const priorityOrder = ['low', 'medium', 'high'];
+const priorityIcons = { low: '🟢', medium: '🟡', high: '🔴' };
+
+function setTheme(t) {
+    document.body.classList.toggle('dark', t === 'dark');
+    theme = t;
+    localStorage.setItem('theme', t);
+}
 
 function saveTasks() {
     localStorage.setItem('tasks', JSON.stringify(tasks));
@@ -31,6 +43,11 @@ function renderTasks() {
             checkbox.checked = task.completed;
             checkbox.addEventListener('change', () => toggleTask(task.id));
 
+            const icon = document.createElement('span');
+            icon.className = 'priority';
+            icon.textContent = priorityIcons[task.priority || 'low'];
+            icon.addEventListener('click', () => cyclePriority(task.id));
+
             const span = document.createElement('span');
             span.textContent = task.title;
             span.contentEditable = true;
@@ -48,6 +65,7 @@ function renderTasks() {
             delBtn.addEventListener('click', () => deleteTask(task.id));
 
             li.appendChild(checkbox);
+            li.appendChild(icon);
             li.appendChild(span);
             li.appendChild(editBtn);
             li.appendChild(delBtn);
@@ -57,7 +75,8 @@ function renderTasks() {
 
 function addTask(title) {
     const id = Date.now().toString();
-    tasks.push({ id, title, completed: false });
+    const priority = prioritySelect.value;
+    tasks.push({ id, title, completed: false, priority });
     saveTasks();
     renderTasks();
 }
@@ -80,11 +99,25 @@ function editTask(id, title) {
     renderTasks();
 }
 
+function cyclePriority(id) {
+    tasks = tasks.map(task => {
+        if (task.id === id) {
+            const idx = priorityOrder.indexOf(task.priority || 'low');
+            const next = priorityOrder[(idx + 1) % priorityOrder.length];
+            return { ...task, priority: next };
+        }
+        return task;
+    });
+    saveTasks();
+    renderTasks();
+}
+
 addBtn.addEventListener('click', () => {
     const value = newTaskInput.value.trim();
     if (value) {
         addTask(value);
         newTaskInput.value = '';
+        prioritySelect.value = 'low';
     }
 });
 
@@ -113,5 +146,11 @@ searchInput.addEventListener('input', () => {
     searchQuery = searchInput.value.trim();
     renderTasks();
 });
+
+themeToggle.addEventListener('click', () => {
+    setTheme(theme === 'light' ? 'dark' : 'light');
+});
+
+setTheme(theme);
 
 renderTasks();
